@@ -1,6 +1,11 @@
 # portainers
-docker_installs
-
+**docker installs:**
+1.  docker
+2.  nginx proxy
+3.  speedtest
+4.  grafana
+5.  influxdb
+6.  portainers
 
 #README.md docker_installs
 
