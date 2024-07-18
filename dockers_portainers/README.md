@@ -13,7 +13,7 @@ This script will help install any, or all, of Docker-CE, Docker-Compose, NGinX P
 
 #Run: Download và chạy code cài docker Gõ lệnh trên thông qua màn PuTTy đã kết nối thành công tới ipv4 của Ubuntu 20.04:
 
-wget https://raw.githubusercontent.com/PhDLeToanThang/portainers/main/install-docker-nginx.sh && sudo bash install-docker-nginx.sh
+wget https://raw.githubusercontent.com/PhDLeToanThang/k8s-k3s/main/dockers_portainers/install-docker-nginx.sh && sudo bash install-docker-nginx.sh
 
 Future Work:
 
