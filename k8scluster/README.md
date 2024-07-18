@@ -1,37 +1,44 @@
-# portainers
-**docker installs:**
-1.  docker
-2.  nginx proxy
-3.  speedtest
-4.  grafana
-5.  influxdb
-6.  portainers
+# kiến ​​trúc Kubernetes Cluster Full Outline:
+_nếu bạn đang tìm kiếm:_
 
-#README.md docker_installs
+**Mục lục:**
+1. Hiểu kiến ​​trúc của Kubernetes
+2. Nắm bắt các khái niệm cơ bản về Kubernetes
+3. Tìm hiểu về các thành phần kiến ​​trúc Kubernetes
+4. Khám phá quy trình làm việc kết nối các thành phần này
+Sau đó, bạn sẽ thấy hướng dẫn về kiến ​​trúc Kubernetes này là quan trọng.
 
-This script will help install any, or all, of Docker-CE, Docker-Compose, NGinX Proxy Manager, and Portainer-CE.
+# Kiến trúc Kubernetes là gì?
 
-#Run: Download và chạy code cài docker Gõ lệnh trên thông qua màn PuTTy đã kết nối thành công tới ipv4 của Ubuntu 20.04:
+_Sơ đồ kiến ​​trúc Kubernetes sau đây hiển thị tất cả các thành phần của cụm Kubernetes và cách các hệ thống bên ngoài kết nối với cụm Kubernetes._
 
-wget https://raw.githubusercontent.com/PhDLeToanThang/portainers/main/install-docker-nginx.sh && sudo bash install-docker-nginx.sh
+![image](https://github.com/user-attachments/assets/9c3d47f7-e16a-47d7-a356-11d8289be6ba)
 
-Future Work:
+Điều đầu tiên và quan trọng nhất bạn nên hiểu về Kubernetes là nó là một hệ thống phân tán. 
+Có nghĩa là nó có nhiều thành phần trải rộng trên các máy chủ khác nhau qua mạng. 
+Những máy chủ này có thể là máy ảo hoặc máy chủ vật lý. Chúng ta gọi nó là **cụm Kubernetes - viết tắt: K8s Cluster**.
 
-Make it work for Raspberry Pi
-Make it work for Arch
-Make it work for OpenSuse
-Maybe add a few other default containers to pull down and start running
-Prompt for Credentials to use in NGinX Proxy Manager db settings vs. using the defaults.
+**Cụm Kubernetes** bao gồm các nút có trong **Bảng điều khiển - Control panel: viết tắt: cc** và các nút Xử lý **Nút Xử lý - Node Workers**.
 
-Contributing:
+## Bảng điều khiển - cc
 
-If you find issues, please let me know. I'm always open to new contributors helping me add Distro support, more software packages, etc. Just clone the project and make a pull request with any changes you add.
+Bảng điều khiển chịu trách nhiệm điều phối vùng chứa và duy trì trạng thái mong muốn của cụm K8s. Nó có các thành phần sau:
 
-Licensing:
+1. kube-apiserver (máy chủ kube)
+1. etcd
+1. kube-scheduler (lập lịch kube)
+1. kube-controller-manager (quản lý bộ điều khiển kube)
+1. cloud-controller-manager (trình quản lý bộ điều khiển đám mây)
 
-My script is offered without warranty against defect, and is free for you to use any way / time you want. You may modify it in any way you see fit. Please see the individual project pages of the software packages for their licensing.
+Một cụm có thể có một hoặc nhiều nút Bảng điều khiển "control plane nodes".
 
+## Nút Xử lý - node workers
 
-Troubleshootings:
+Các nút Worker chịu trách nhiệm chạy các ứng dụng được chứa trong container. Nút Xử lý có các thành phần sau:
 
-sudo docker restart portainer
+1. kubelet
+1. kube-proxy
+1. Container runtime
+
+## Các thành phần có trong Bảng điều khiển Kubernetes:
+
