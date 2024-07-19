@@ -1,4 +1,4 @@
-# Kiến ​​trúc Kubernetes Cluster Full Outline:
+# Phần 1. Kiến ​​trúc Kubernetes Cluster:
 _nếu bạn đang tìm kiếm:_
 
 **Mục lục:**
@@ -18,9 +18,9 @@ _Sơ đồ kiến ​​trúc Kubernetes sau đây hiển thị tất cả các 
 Có nghĩa là nó có nhiều thành phần trải rộng trên các máy chủ khác nhau qua mạng. 
 Những máy chủ này có thể là máy ảo hoặc máy chủ vật lý. Chúng ta gọi nó là **cụm Kubernetes - viết tắt: K8s Cluster**.
 
-**Cụm Kubernetes** bao gồm các nút có trong **Bảng điều khiển - Control panel: viết tắt: cc** và các nút Xử lý **Nút Xử lý - Node Workers**.
+**Cụm Kubernetes** bao gồm các nút có trong **Bảng điều khiển - Control panel: viết tắt: cp** và các nút Xử lý **Nút XỬ LÝ - Node Workers**.
 
-## Bảng điều khiển - cc
+## Bảng điều khiển - CONTROL PANEL:
 
 Bảng điều khiển chịu trách nhiệm điều phối vùng chứa và duy trì trạng thái mong muốn của cụm K8s. Nó có các thành phần sau:
 
@@ -30,11 +30,11 @@ Bảng điều khiển chịu trách nhiệm điều phối vùng chứa và duy
 1. kube-controller-manager (quản lý bộ điều khiển kube)
 1. cloud-controller-manager (trình quản lý bộ điều khiển đám mây)
 
-Một cụm có thể có một hoặc nhiều nút Bảng điều khiển "control plane nodes".
+Một cụm có thể có một hoặc nhiều nút **Bảng điều khiển "control plane nodes"**.
 
 ## Nút Xử lý - node workers
 
-Các nút Worker chịu trách nhiệm chạy các ứng dụng được chứa trong container. Nút Xử lý có các thành phần sau:
+Các nút Worker chịu trách nhiệm chạy các ứng dụng được chứa trong container. NútXỬ LÝ có các thành phần sau:
 
 1. kubelet
 1. kube-proxy
@@ -42,14 +42,16 @@ Các nút Worker chịu trách nhiệm chạy các ứng dụng được chứa 
 
 ## Các thành phần có trong Bảng điều khiển Kubernetes:
 
-Trước tiên, chúng ta hãy xem xét từng thành phần của mặt phẳng điều khiển và các khái niệm quan trọng đằng sau mỗi thành phần:
+Trước tiên, chúng ta hãy xem xét từng thành phần của bảng điều khiển và các khái niệm quan trọng đằng sau mỗi thành phần:
 
 ### 1. kube-apiserver:
 
-Máy chủ kube-apiserver là trung tâm của cụm Kubernetes hiển thị API Kubernetes. Nó có khả năng mở rộng cao và có thể xử lý số lượng lớn yêu cầu đồng thời.
+Máy chủ **kube-apiserver** là trung tâm của cụm Kubernetes hiển thị API Kubernetes. Nó có khả năng mở rộng cao và có thểXỬ LÝ số lượng lớn yêu cầu đồng thời.
 Người dùng cuối và các thành phần cụm khác giao tiếp với cụm thông qua máy chủ API. Rất hiếm khi hệ thống giám sát và dịch vụ của bên thứ ba có thể giao tiếp với máy chủ API để tương tác với cụm.
 
-Vì vậy, khi bạn sử dụng kubectl để quản lý cụm, ở phần phụ trợ, bạn thực sự đang giao tiếp với máy chủ API thông qua API HTTP REST . Tuy nhiên, các thành phần cụm bên trong như bộ lập lịch 'scheduler', bộ điều khiển 'controller', v.v. sẽ giao tiếp với máy chủ API bằng gRPC (https://grpc.io/docs/what-is-grpc/introduction/) .
+Vì vậy, khi bạn sử dụng kubectl để quản lý cụm, ở phần phụ trợ, bạn thực sự đang giao tiếp với máy chủ API thông qua **API HTTP REST**. 
+Tuy nhiên, các thành phần cụm bên trong như bộ lập lịch 'scheduler', bộ điều khiển 'controller', v.v. 
+sẽ giao tiếp với máy chủ API bằng gRPC (https://grpc.io/docs/what-is-grpc/introduction/) .
 
 Giao tiếp giữa máy chủ API và các thành phần khác trong cụm diễn ra qua TLS để ngăn chặn truy cập trái phép vào cụm.
 
@@ -59,15 +61,19 @@ _Kiến trúc Kubernetes - giải thích về kube-apiserver_
 
 #### Kubernetes api-server chịu trách nhiệm về những điều sau:
 
-1. Quản lý API : Hiển thị điểm cuối API cụm và xử lý tất cả các yêu cầu API. API là phiên bản và nó hỗ trợ nhiều phiên bản API cùng một lúc.
-1. Xác thực (Sử dụng chứng chỉ ứng dụng khách, mã thông báo mang và Xác thực cơ bản HTTP) và Ủy quyền (đánh giá ABAC và RBAC).
+1. **Quản lý API**: Hiển thị điểm cuối API cụm và xử lý tất cả các yêu cầu API. API là phiên bản và nó hỗ trợ nhiều phiên bản API cùng một lúc.
+1. **Xác thực** (Sử dụng chứng chỉ ứng dụng khách, mã thông báo mạng 'bearer tokens' và Xác thực cơ bản HTTP) và **Ủy quyền** (đánh giá ABAC và RBAC).
 1. Xử lý các yêu cầu API và xác thực dữ liệu cho các đối tượng API như nhóm, dịch vụ, v.v. (Bộ điều khiển nhập học xác thực và đột biến).
 1. Nó là thành phần duy nhất giao tiếp với etcd.
-1. api-server điều phối tất cả các quy trình giữa mặt phẳng điều khiển và các thành phần nút workers.
-1. api-server có proxy apiserver tích hợp sẵn . Nó là một phần của quy trình máy chủ API.
+1. api-server điều phối tất cả các quy trình giữa bảng điều khiển và các thành phần nút workers.
+1. api-server có **proxy apiserver** tích hợp sẵn . Nó là một phần của quy trình máy chủ API.
 Nó chủ yếu được sử dụng để cho phép truy cập vào các dịch vụ ClusterIP từ bên ngoài cụm, mặc dù các dịch vụ này thường chỉ có thể truy cập được trong chính cụm đó.
-1. Máy chủ API cũng có một lớp tổng hợp cho phép bạn mở rộng API Kubernetes để tạo các tài nguyên và bộ điều khiển API tùy chỉnh.
-1. Máy chủ API cũng hỗ trợ xem tài nguyên để biết các thay đổi. Ví dụ: khách hàng có thể thiết lập chế độ theo dõi trên các tài nguyên cụ thể và nhận thông báo theo thời gian thực khi các tài nguyên đó được tạo, sửa đổi hoặc xóa
+1. Máy chủ API cũng có một lớp tổng hợp 'Kubernetes API Aggregation Layer' (https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/apiserver-aggregation/) cho phép bạn mở rộng API Kubernetes để tạo các tài nguyên và bộ điều khiển API tùy chỉnh.
+1. Máy chủ API cũng **hỗ trợ xem tài nguyên để biết các thay đổi**.
+_Ví dụ: khách hàng có thể thiết lập chế độ theo dõi trên các tài nguyên cụ thể và nhận thông báo theo thời gian thực khi các tài nguyên đó được tạo, sửa đổi hoặc xóa._
+
+> **Lưu ý bảo mật:** Để giảm bề mặt tấn công cụm, điều quan trọng là phải bảo mật máy chủ API.
+> Shadowserver Foundation đã tiến hành một thử nghiệm phát hiện 380.000 máy chủ API Kubernetes có thể truy cập công khai .
 
 ### 2. etcd:
 Kubernetes là một hệ thống phân tán và nó cần một cơ sở dữ liệu phân tán hiệu quả như etcd để hỗ trợ tính chất phân tán của nó.
@@ -102,49 +108,66 @@ etcd lưu trữ tất cả các đối tượng trong khóa thư mục /registry
 
 _Ví dụ: thông tin về nhóm có tên Nginx trong không gian tên mặc định có thể được tìm thấy trong /registry/pod/default/nginx_
 
-![image](https://github.com/user-attachments/assets/48c0ec6b-4900-44a2-86cc-1046031b5791)
+![image](https://github.com/user-attachments/assets/183459ce-1f59-444e-8dcd-e9474b144175)
 
-_Ngoài ra, etcd nó là thành phần Statefulset duy nhất trong mặt phẳng điều khiển._
+_Ngoài ra, etcd nó là thành phần Statefulset duy nhất trong bảng điều khiển._
 
 ### 3. kube-scheduler:
 
-Bộ lập lịch kube chịu trách nhiệm lập lịch cho các nhóm Kubernetes trên các nút công nhân.
+Bộ lập lịch kube chịu trách nhiệm lập lịch cho các nhóm Kubernetes trên các nút XỬ LÝ.
 
-Khi triển khai một nhóm, bạn chỉ định các yêu cầu về nhóm như CPU, bộ nhớ, mối quan hệ, vết bẩn hoặc dung sai, mức độ ưu tiên, khối lượng liên tục (PV), v.v. Nhiệm vụ chính của bộ lập lịch là xác định yêu cầu tạo và chọn nút tốt nhất cho nhóm nhóm đáp ứng được yêu cầu.
+Khi triển khai một nhóm, bạn chỉ định các yêu cầu về nhóm như CPU, bộ nhớ, mối quan hệ, vết bẩn hoặc dung sai, mức độ ưu tiên, khối lượng liên tục (PV), v.v. 
+Nhiệm vụ chính của bộ lập lịch là xác định yêu cầu tạo và chọn nút tốt nhất cho nhóm nhóm đáp ứng được yêu cầu.
 
 Hình ảnh sau đây hiển thị tổng quan cấp cao về cách hoạt động của bộ lập lịch.
 
-![image](https://github.com/user-attachments/assets/184dde4f-239b-4d82-83a3-28b32a8d2dd6)
+![image](https://github.com/user-attachments/assets/ce3f5a38-f3d9-4043-b97b-814d5317585b)
 
 _sơ đồ quy trình làm việc của bộ lập lịch kubernetes cấp cao._
 
-Trong cụm Kubernetes, sẽ có nhiều nút công nhân. Vậy làm thế nào để bộ lập lịch chọn nút trong số tất cả các nút Workers?
+Trong cụm Kubernetes, sẽ có nhiều nút XỬ LÝ. Vậy làm thế nào để bộ lập lịch chọn nút trong số tất cả các nút Workers?
 
-Đây là cách bộ lập lịch hoạt động.
+**Đây là cách bộ lập lịch hoạt động:**
 
 Để chọn nút tốt nhất, bộ lập lịch Kube sử dụng các hoạt động lọc và tính điểm.
-Trong quá trình lọc , bộ lập lịch sẽ tìm các nút phù hợp nhất để nhóm có thể được lên lịch. Ví dụ: nếu có năm nút công nhân có sẵn tài nguyên để chạy nhóm, thì nó sẽ chọn tất cả năm nút. Nếu không có nút nào thì nhóm đó sẽ không thể lập lịch trình và được chuyển đến hàng đợi lập lịch trình. Nếu Đó là một cụm lớn, giả sử có 100 nút công nhân và bộ lập lịch không lặp lại trên tất cả các nút. Có một tham số cấu hình bộ lập lịch được gọi là percentageOfNodesToScore. Giá trị mặc định thường là 50% . Vì vậy, nó cố gắng lặp lại hơn 50% số nút theo kiểu vòng tròn. Nếu các nút công nhân được trải rộng trên nhiều vùng thì bộ lập lịch sẽ lặp lại các nút ở các vùng khác nhau. Đối với các cụm rất lớn, mặc định percentageOfNodesToScorelà 5%.
-Trong giai đoạn tính điểm , bộ lập lịch xếp hạng các nút bằng cách gán điểm cho các nút công nhân được lọc. Bộ lập lịch thực hiện việc chấm điểm bằng cách gọi nhiều plugin lập lịch . Cuối cùng, nút công nhân có thứ hạng cao nhất sẽ được chọn để lên lịch cho nhóm. Nếu tất cả các nút có cùng thứ hạng thì một nút sẽ được chọn ngẫu nhiên.
-Sau khi nút được chọn, bộ lập lịch sẽ tạo một sự kiện ràng buộc trong máy chủ API. Có nghĩa là một sự kiện để liên kết một nhóm và nút.
+Trong quá trình lọc , bộ lập lịch sẽ tìm các nút phù hợp nhất để nhóm có thể được lên lịch. 
+_Ví dụ: nếu có năm nút XỬ LÝ có sẵn tài nguyên để chạy nhóm, thì nó sẽ chọn tất cả năm nút._
+Nếu không có nút nào thì nhóm đó sẽ không thể lập lịch trình và được chuyển đến hàng đợi lập lịch trình. 
+Nếu Đó là một cụm lớn, giả sử có 100 nút XỬ LÝ và bộ lập lịch không lặp lại trên tất cả các nút. 
+Có một tham số cấu hình bộ lập lịch được gọi là percentageOfNodesToScore. Giá trị mặc định thường là 50% . 
+Vì vậy, nó cố gắng lặp lại hơn 50% số nút theo kiểu vòng tròn. 
+Nếu các nút XỬ LÝ được trải rộng trên nhiều vùng thì bộ lập lịch sẽ lặp lại các nút ở các vùng khác nhau. 
+Đối với các cụm rất lớn, mặc định percentageOfNodesToScorelà 5%.
+Trong giai đoạn tính điểm , bộ lập lịch xếp hạng các nút bằng cách gán điểm cho các nút XỬ LÝ được lọc. 
+Bộ lập lịch thực hiện việc chấm điểm bằng cách gọi nhiều plugin lập lịch. 
+Cuối cùng, nút XỬ LÝ có thứ hạng cao nhất sẽ được chọn để lên lịch cho nhóm.
+Nếu tất cả các nút có cùng thứ hạng thì một nút sẽ được chọn ngẫu nhiên.
+Sau khi nút được chọn, bộ lập lịch sẽ tạo một sự kiện ràng buộc trong máy chủ API. 
+Có nghĩa là một sự kiện để liên kết một nhóm và nút.
 Đây là những điều bạn cần biết về một công cụ lập lịch trình.
 
 Nó là bộ điều khiển lắng nghe các sự kiện tạo nhóm trong máy chủ API.
-Bộ lập lịch có hai giai đoạn. Chu kỳ lập kế hoạch  và  chu trình Ràng buộc . Cùng nhau nó được gọi là bối cảnh lập kế hoạch. Chu trình lập lịch sẽ chọn một nút công nhân và chu trình liên kết sẽ áp dụng thay đổi đó cho cụm.
-Bộ lập lịch luôn đặt các nhóm có mức độ ưu tiên cao trước các nhóm có mức độ ưu tiên thấp để lập lịch. Ngoài ra, trong một số trường hợp, sau khi nhóm bắt đầu chạy trong nút đã chọn, nhóm có thể bị trục xuất hoặc chuyển sang các nút khác. Nếu bạn muốn hiểu thêm, hãy đọc hướng dẫn ưu tiên nhóm Kubernetes
-Bạn có thể tạo bộ lập lịch tùy chỉnh và chạy nhiều bộ lập lịch trong một cụm cùng với bộ lập lịch gốc. Khi triển khai một nhóm, bạn có thể chỉ định bộ lập lịch tùy chỉnh trong bảng kê khai nhóm. Vì vậy, các quyết định lập lịch sẽ được đưa ra dựa trên logic của bộ lập lịch tùy chỉnh.
-Bộ lập lịch có một khung lập lịch có thể cắm được . Có nghĩa là bạn có thể thêm plugin tùy chỉnh của mình vào quy trình lập lịch trình.
+Bộ lập lịch có hai giai đoạn. Chu kỳ lập kế hoạch  và  chu trình Ràng buộc. 
+Cùng nhau nó được gọi là bối cảnh lập kế hoạch. Chu trình lập lịch sẽ chọn một nút XỬ LÝ và chu trình liên kết sẽ áp dụng thay đổi đó cho cụm.
+Bộ lập lịch luôn đặt các nhóm có mức độ ưu tiên cao trước các nhóm có mức độ ưu tiên thấp để lập lịch. 
+Ngoài ra, trong một số trường hợp, sau khi nhóm bắt đầu chạy trong nút đã chọn, nhóm có thể bị trục xuất hoặc chuyển sang các nút khác. 
+Nếu bạn muốn hiểu thêm, hãy đọc hướng dẫn ưu tiên nhóm Kubernetes.
+Bạn có thể tạo bộ lập lịch tùy chỉnh và chạy nhiều bộ lập lịch trong một cụm cùng với bộ lập lịch gốc.
+Khi triển khai một nhóm, bạn có thể chỉ định bộ lập lịch tùy chỉnh trong bảng kê khai nhóm. 
+Vì vậy, các quyết định lập lịch sẽ được đưa ra dựa trên logic của bộ lập lịch tùy chỉnh.
+Bộ lập lịch có một khung lập lịch có thể cắm được . 
+Có nghĩa là bạn có thể thêm plugin tùy chỉnh của mình vào quy trình lập lịch trình.
 
 4. Trình quản lý bộ điều khiển Kube
 Bộ điều khiển là gì? Bộ điều khiển là các chương trình chạy các vòng điều khiển vô hạn. Có nghĩa là nó chạy liên tục và theo dõi trạng thái thực tế và mong muốn của các đối tượng. Nếu có sự khác biệt giữa trạng thái thực tế và trạng thái mong muốn, nó đảm bảo rằng tài nguyên/đối tượng kubernetes ở trạng thái mong muốn.
 
-Theo tài liệu chính thức,
+Theo tài liệu chính thức:
 
 Trong Kubernetes, bộ điều khiển là các vòng điều khiển theo dõi trạng thái cụm của bạn, sau đó thực hiện hoặc yêu cầu thay đổi nếu cần. Mỗi bộ điều khiển cố gắng di chuyển trạng thái cụm hiện tại đến gần trạng thái mong muốn hơn.
 
 Giả sử bạn muốn tạo một bản triển khai, bạn chỉ định trạng thái mong muốn trong tệp YAML kê khai (phương pháp khai báo). Ví dụ: 2 bản sao, một ổ đĩa gắn kết, sơ đồ cấu hình, v.v. Bộ điều khiển triển khai tích hợp sẵn đảm bảo rằng quá trình triển khai luôn ở trạng thái mong muốn. Nếu người dùng cập nhật quá trình triển khai với 5 bản sao thì bộ điều khiển triển khai sẽ nhận ra nó và đảm bảo trạng thái mong muốn là 5 bản sao.
 
 Trình quản lý bộ điều khiển Kube là một thành phần quản lý tất cả các bộ điều khiển Kubernetes. Các tài nguyên/đối tượng Kubernetes như nhóm, không gian tên, công việc, bản sao được quản lý bởi bộ điều khiển tương ứng. Ngoài ra, bộ lập lịch Kube cũng là bộ điều khiển được quản lý bởi trình quản lý bộ điều khiển Kube.
-
 
 ![image](https://github.com/user-attachments/assets/f3d71097-50b6-4785-bcb7-9cc71f64543f)
 
@@ -190,12 +213,12 @@ Trình quản lý bộ điều khiển đám mây tổng thể quản lý vòng 
 
 # Các thành phần nút Worker Kubernetes:
 
-## Bây giờ chúng ta hãy xem xét từng thành phần của nút công nhân.
+## Bây giờ chúng ta hãy xem xét từng thành phần của nút XỬ LÝ.
 
 ### 1. Kubelet
 Kubelet là thành phần tác nhân chạy trên mọi nút trong cụm. t không chạy dưới dạng vùng chứa thay vào đó chạy dưới dạng daemon, được quản lý bởi systemd.
 
-Nó chịu trách nhiệm đăng ký các nút công nhân với máy chủ API và làm việc với podSpec (Đặc tả Pod – YAML hoặc JSON) chủ yếu từ máy chủ API. podSpec xác định các vùng chứa sẽ chạy bên trong nhóm, tài nguyên của chúng (ví dụ: giới hạn CPU và bộ nhớ) cũng như các cài đặt khác như biến môi trường, ổ đĩa và nhãn.
+Nó chịu trách nhiệm đăng ký các nút XỬ LÝ với máy chủ API và làm việc với podSpec (Đặc tả Pod – YAML hoặc JSON) chủ yếu từ máy chủ API. podSpec xác định các vùng chứa sẽ chạy bên trong nhóm, tài nguyên của chúng (ví dụ: giới hạn CPU và bộ nhớ) cũng như các cài đặt khác như biến môi trường, ổ đĩa và nhãn.
 
 Sau đó, nó đưa podSpec về trạng thái mong muốn bằng cách tạo các thùng chứa.
 
@@ -215,7 +238,7 @@ Nhóm tĩnh được điều khiển bởi kubelet chứ không phải máy ch�
 
 Dưới đây là trường hợp sử dụng ví dụ thực tế của nhóm tĩnh.
 
-Trong khi khởi động mặt phẳng điều khiển, kubelet khởi động máy chủ api, bộ lập lịch và trình quản lý bộ điều khiển dưới dạng các nhóm tĩnh từ podSpecs nằm ở/etc/kubernetes/manifests
+Trong khi khởi động bảng điều khiển, kubelet khởi động máy chủ api, bộ lập lịch và trình quản lý bộ điều khiển dưới dạng các nhóm tĩnh từ podSpecs nằm ở/etc/kubernetes/manifests
 
 Sau đây là một số điều quan trọng về kubelet.
 
@@ -281,7 +304,7 @@ Kubernetes hỗ trợ nhiều thời gian chạy container (CRI-O, Docker Engine
 
 Vậy Kubernetes tận dụng thời gian chạy của container như thế nào?
 
-Như chúng ta đã tìm hiểu trong phần Kubelet, tác nhân kubelet chịu trách nhiệm tương tác với thời gian chạy vùng chứa bằng API CRI để quản lý vòng đời của vùng chứa. Nó cũng lấy tất cả thông tin về vùng chứa từ thời gian chạy của vùng chứa và cung cấp thông tin đó cho mặt phẳng điều khiển.
+Như chúng ta đã tìm hiểu trong phần Kubelet, tác nhân kubelet chịu trách nhiệm tương tác với thời gian chạy vùng chứa bằng API CRI để quản lý vòng đời của vùng chứa. Nó cũng lấy tất cả thông tin về vùng chứa từ thời gian chạy của vùng chứa và cung cấp thông tin đó cho bảng điều khiển.
 
 Hãy lấy một ví dụ về giao diện thời gian chạy của vùng chứa CRI-O . Dưới đây là thông tin tổng quan cấp cao về cách hoạt động của thời gian chạy vùng chứa với kubernetes.
 
@@ -328,50 +351,54 @@ Mạng nhóm
 Bảo mật và cách ly mạng nhóm bằng cách sử dụng Chính sách mạng để kiểm soát luồng lưu lượng giữa các nhóm và giữa các không gian tên.
 Một số plugin CNI phổ biến bao gồm:
 
-Calico
-vải nỉ
-Dệt lưới
-Cilium (Sử dụng eBPF)
-Amazon VPC CNI (Dành cho AWS VPC)
-Azure CNI (Dành cho mạng ảo Azure)Mạng Kubernetes là một chủ đề lớn và nó khác nhau tùy theo nền tảng lưu trữ.
-Đối tượng gốc Kubernetes
+1. Calico
+1. vải nỉ
+1. Dệt lưới
+1. Cilium (Sử dụng eBPF)
+1. Amazon VPC CNI (Dành cho AWS VPC)
+1. Azure CNI (Dành cho mạng ảo Azure)Mạng Kubernetes là một chủ đề lớn và nó khác nhau tùy theo nền tảng lưu trữ.
+1. Đối tượng gốc Kubernetes
 Cho đến bây giờ chúng ta đã tìm hiểu về các thành phần kubernetes cốt lõi và cách hoạt động của từng thành phần.
 
-Tất cả các thành phần này đều hướng tới việc quản lý các đối tượng Kubernetes chính sau đây.
+Tất cả các thành phần này đều hướng tới việc quản lý các đối tượng Kubernetes chính sau đây:
 
-Nhóm
-Không gian tên
-Bản sao
-Triển khai
-Daemonset
-Bộ trạng thái
-Việc làm & Cronjob
-Bản đồ cấu hình và bí mật
-Khi nói đến kết nối mạng, các đối tượng Kubernetes sau đây đóng vai trò quan trọng.
+1. Nhóm
+1. Không gian tên
+1. Bản sao
+1. Triển khai
+1. Daemonset
+1. Bộ trạng thái
+1. Việc làm & Cronjob
+1. Bản đồ cấu hình và bí mật
+   
+Khi nói đến kết nối mạng, các đối tượng Kubernetes sau đây đóng vai trò quan trọng:
 
-Dịch vụ
-Xâm nhập
-Chính sách mạng.
+1. Dịch vụ
+1. Xâm nhập
+1. Chính sách mạng.
+   
 Ngoài ra, Kubernetes có thể mở rộng bằng CRD và Bộ điều khiển tùy chỉnh. Vì vậy, các thành phần cụm cũng quản lý các đối tượng được tạo bằng bộ điều khiển tùy chỉnh và định nghĩa tài nguyên tùy chỉnh.
 
-# Câu hỏi thường gặp về kiến ​​trúc Kubernetes
+## Câu hỏi thường gặp về kiến ​​trúc Kubernetes
 
-Mục đích chính của mặt phẳng điều khiển Kubernetes là gì?
-Mặt phẳng điều khiển chịu trách nhiệm duy trì trạng thái mong muốn của cụm và các ứng dụng đang chạy trên đó. Nó bao gồm các thành phần như máy chủ API, etcd, Trình lập lịch biểu và trình quản lý bộ điều khiển.
+1. Mục đích chính của bảng điều khiển Kubernetes là gì?
+bảng điều khiển chịu trách nhiệm duy trì trạng thái mong muốn của cụm và các ứng dụng đang chạy trên đó. Nó bao gồm các thành phần như máy chủ API, etcd, Trình lập lịch biểu và trình quản lý bộ điều khiển.
 
-Mục đích của các nút công nhân trong cụm Kubernetes là gì?
-Các nút công nhân là các máy chủ (kim loại trần hoặc ảo) chạy vùng chứa trong cụm. Chúng được quản lý bởi mặt phẳng điều khiển và nhận hướng dẫn từ nó về cách chạy các container là một phần của nhóm.
+1. Mục đích của các nút XỬ LÝ trong cụm Kubernetes là gì?
+Các nút XỬ LÝ là các máy chủ (kim loại trần hoặc ảo) chạy vùng chứa trong cụm. Chúng được quản lý bởi bảng điều khiển và nhận hướng dẫn từ nó về cách chạy các container là một phần của nhóm.
 
-Giao tiếp giữa mặt phẳng điều khiển và nút công nhân được bảo mật như thế nào trong Kubernetes?
-Giao tiếp giữa mặt phẳng điều khiển và các nút công nhân được bảo mật bằng chứng chỉ PKI và giao tiếp giữa các thành phần khác nhau diễn ra qua TLS. Bằng cách này, chỉ những thành phần đáng tin cậy mới có thể giao tiếp với nhau.
+1. Giao tiếp giữa bảng điều khiển và nút XỬ LÝ được bảo mật như thế nào trong Kubernetes?
+Giao tiếp giữa bảng điều khiển và các nút XỬ LÝ được bảo mật bằng chứng chỉ PKI và giao tiếp giữa các thành phần khác nhau diễn ra qua TLS. Bằng cách này, chỉ những thành phần đáng tin cậy mới có thể giao tiếp với nhau.
 
-Mục đích của kho lưu trữ khóa-giá trị etcd trong Kubernetes là gì?
+1. Mục đích của kho lưu trữ khóa-giá trị etcd trong Kubernetes là gì?
 Etcd chủ yếu lưu trữ các đối tượng kubernetes, thông tin cụm, thông tin nút và dữ liệu cấu hình của cụm, chẳng hạn như trạng thái mong muốn của các ứng dụng chạy trên cụm.
 
-Điều gì xảy ra với các ứng dụng Kubernetes nếu etcd bị hỏng?
+1. Điều gì xảy ra với các ứng dụng Kubernetes nếu etcd bị hỏng?
 Mặc dù các ứng dụng đang chạy sẽ không bị ảnh hưởng nếu etcd bị ngừng hoạt động, nhưng sẽ không thể tạo hoặc cập nhật bất kỳ đối tượng nào nếu không có etcd hoạt động.
 
-# Phần kết luận
+## Phần kết luận
 Hiểu kiến ​​trúc Kubernetes giúp bạn triển khai và vận hành Kubernetes hàng ngày.
 
 Khi triển khai thiết lập cụm cấp sản xuất, việc có kiến ​​thức đúng đắn về các thành phần Kubernetes sẽ giúp bạn chạy và khắc phục sự cố ứng dụng
+
+# Phần 2. 
