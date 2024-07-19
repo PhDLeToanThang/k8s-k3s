@@ -394,7 +394,7 @@ Khi nói đến kết nối mạng, các đối tượng Kubernetes sau đây đ
 Bảng điều khiển chịu trách nhiệm duy trì trạng thái mong muốn của cụm và các ứng dụng đang chạy trên đó. Nó bao gồm các thành phần như máy chủ API, etcd, Trình lập lịch biểu và trình quản lý bộ điều khiển.
 
 1. **Mục đích của các nút XỬ LÝ trong cụm Kubernetes là gì?**
-Các nút XỬ LÝ là các máy chủ (kim loại trần hoặc ảo) chạy vùng chứa trong cụm. Chúng được quản lý bởi bảng điều khiển và nhận hướng dẫn từ nó về cách chạy các container là một phần của nhóm.
+Các nút XỬ LÝ là các máy chủ (Máy vật lý hoặc ảo) chạy vùng chứa trong cụm. Chúng được quản lý bởi bảng điều khiển và nhận hướng dẫn từ nó về cách chạy các container là một phần của nhóm.
 
 1. **Giao tiếp giữa bảng điều khiển và nút XỬ LÝ được bảo mật như thế nào trong Kubernetes?**
 Giao tiếp giữa bảng điều khiển và các nút XỬ LÝ được bảo mật bằng chứng chỉ PKI và giao tiếp giữa các thành phần khác nhau diễn ra qua TLS. Bằng cách này, chỉ những thành phần đáng tin cậy mới có thể giao tiếp với nhau.
