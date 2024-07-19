@@ -409,4 +409,75 @@ Mặc dù các ứng dụng đang chạy sẽ không bị ảnh hưởng nếu e
 - Hiểu kiến ​​trúc Kubernetes giúp bạn triển khai và vận hành Kubernetes hàng ngày.
 - Khi triển khai thiết lập cụm cấp sản xuất, việc có kiến ​​thức đúng đắn về các thành phần Kubernetes sẽ giúp bạn chạy và khắc phục sự cố ứng dụng
 
-# Phần 2. 
+# Phần 2. Cách thiết lập cụm Kubernetes bằng Kubeadm
+
+_Hướng dẫn từng bước để thiết lập cụm kubernetes bằng Kubeadm với một nút chính - Master và 02 (hai) nút XỬ LÝ - Worker Nodes._
+
+Kubeadm ( https://github.com/kubernetes/kubeadm ) là một công cụ tuyệt vời để thiết lập cụm kubernetes hoạt động trong thời gian ngắn hơn. Nó thực hiện tất cả các công việc nặng nhọc trong việc thiết lập tất cả các thành phần cụm kubernetes. Ngoài ra, Nó tuân theo tất cả các phương pháp hay nhất về cấu hình cho cụm kubernetes.
+
+## Kubeadm là gì?
+Kubeadm là một công cụ để thiết lập cụm Kubernetes khả thi tối thiểu mà không cần cấu hình phức tạp. Ngoài ra, Kubeadm giúp toàn bộ quá trình trở nên dễ dàng bằng cách chạy một loạt các bước kiểm tra trước để đảm bảo rằng máy chủ có tất cả các thành phần và cấu hình cần thiết để chạy Kubernetes.
+
+Nó được phát triển và duy trì bởi cộng đồng Kubernetes chính thức. Có các tùy chọn khác như minikube (https://devopscube.com/kubernetes-minikube-tutorial/) , kind, v.v., khá dễ cài đặt. Bạn có thể xem hướng dẫn minikube của tôi . Đó là những lựa chọn tốt với yêu cầu phần cứng tối thiểu nếu bạn đang triển khai và thử nghiệm ứng dụng trên Kubernetes.
+
+Nhưng nếu bạn muốn thử nghiệm các thành phần cụm hoặc tiện ích thử nghiệm nằm trong quản trị cụm thì Kubeadm là lựa chọn tốt nhất. Ngoài ra, bạn có thể tạo một cụm giống như sản xuất cục bộ trên máy trạm cho mục đích phát triển và thử nghiệm.
+
+## Điều kiện tiên quyết để thiết lập Kubeadm:
+
+Sau đây là các điều kiện tiên quyết để **thiết lập cụm Kubeadm Kubernetes**.
+
+1. Tối thiểu hai nút Ubuntu [Một nút chính và một nút XỬ LÝ]. Bạn có thể có nhiều nút XỬ LÝ hơn theo yêu cầu của bạn.
+1. Nút chính phải có tối thiểu 2 vCPU và 2GB RAM .
+1. Đối với các nút công nhân, nên sử dụng tối thiểu 1vCPU và RAM 2 GB.
+1. **Phạm vi mạng 10.X.X.X/X** với IP tĩnh cho nút chính và nút công nhân. Chúng tôi sẽ sử dụng dải ipv4 **192.x.x.x làm phạm vi mạng nhóm POD** sẽ được plugin mạng Calico sử dụng. Đảm bảo dải IP nút Nodes và dải IP nhóm POD không trùng nhau.
+   
+**Lưu ý:** Nếu bạn đang thiết lập cụm trong mạng công ty đằng sau proxy, hãy đảm bảo đặt các biến proxy và có quyền truy cập vào sổ đăng ký vùng chứa và trung tâm docker. Hoặc nói chuyện với quản trị viên mạng của bạn để đưa danh sách trắng vào registry.k8s.io để lấy các hình ảnh được yêu cầu.
+
+## Yêu cầu về cổng Kubeadm:
+Vui lòng tham khảo hình ảnh sau đây và đảm bảo tất cả các cổng đều được phép cho bảng điều khiển (chính) và các nút công nhân. Nếu bạn đang thiết lập máy chủ đám mây cụm kubeadm, hãy đảm bảo bạn cho phép các cổng trong cấu hình tường lửa. 
+![image](https://github.com/user-attachments/assets/3770f7b7-95df-4c89-92fa-9dfa9dd73823)
+
+Nếu bạn đang sử dụng máy ảo Ubuntu vagrant-based, tường lửa sẽ bị tắt theo mặc định. Vì vậy, bạn không phải thực hiện bất kỳ cấu hình tường lửa nào.
+
+## Kubeadm cho kỳ thi chứng chỉ Kubernetes
+Nếu bạn đang chuẩn bị cho các chứng chỉ Kubernetes như **CKA, CKAD hoặc CKS**, bạn có thể sử dụng các cụm kubeadm địa phương để luyện tập cho kỳ thi chứng chỉ. Trên thực tế, bản thân kubeadm là một phần của kỳ thi CKA và CKS . Đối với CKA, bạn có thể được yêu cầu khởi động một cụm bằng Kubeadm. Đối với CKS, bạn phải nâng cấp cụm bằng kubeadm.
+
+Nếu sử dụng máy ảo dựa trên Vagrant trên máy trạm của mình, bạn có thể khởi động và dừng cụm bất cứ khi nào bạn cần. Bằng cách có các cụm Kubeadm cục bộ, bạn có thể thử nghiệm với tất cả các cấu hình cụm và tìm hiểu cách khắc phục sự cố các thành phần khác nhau trong cụm.
+
+> **Lưu ý quan trọng:** Nếu bạn dự định đạt chứng nhận Kubernetes, hãy sử dụng Mã phiếu giảm giá CKA/CKAD/CKS trước khi giá tăng.
+
+## Vagrantfile, Kubeadm Tập lệnh & Bản kê khai
+Ngoài ra, tất cả các lệnh được sử dụng trong hướng dẫn này dành cho cấu hình nút chính và nút công nhân đều được lưu trữ trong GitHub . Bạn có thể sao chép kho lưu trữ để tham khảo.
+
+```sh
+git clone https://github.com/techiescamp/kubeadm-scripts
+```
+Hướng dẫn này nhằm mục đích giúp bạn hiểu từng cấu hình cần thiết để thiết lập Kubeadm. Nếu không muốn chạy từng lệnh một, **bạn có thể chạy trực tiếp tệp script**.
+
+Nếu bạn đang sử dụng Vagrant để thiết lập cụm Kubernetes, bạn có thể sử dụng Vagrantfile của tôi. Nó khởi chạy 3 máy ảo. Một Vagrantfile cơ bản tự giải thích. Nếu bạn chưa quen với Vagrant, hãy xem hướng dẫn của Vagrant (https://devopscube.com/vagrant-tutorial-beginners).
+
+Nếu bạn là người dùng Terraform và AWS, bạn có thể sử dụng tập lệnh Terraform có trong thư mục Terraform để tạo các phiên bản ec2 (https://devopscube.com/use-aws-cli-create-ec2-instance) .
+
+Ngoài ra, tôi đã tạo một **video demo về toàn bộ quá trình thiết lập kubeadm**. Bạn có thể tham khảo nó trong quá trình thiết lập.
+Setup Kubernetes Cluster Using Kubeadm [Multi-node]: https://www.youtube.com/watch?v=xX52dc3u2HU 
+
+## Thiết lập cụm Kubernetes bằng Kubeadm
+
+Sau đây là các bước cấp cao liên quan đến việc thiết lập cụm Kubernetes dựa trên kubeadm:
+
+1. Cài đặt thời gian chạy vùng chứa trên tất cả các nút- Chúng tôi sẽ sử dụng cri-o .
+1. Cài đặt Kubeadm, Kubelet và kubectl trên tất cả các nút.
+1. Bắt đầu cấu hình mặt phẳng điều khiển Kubeadm trên nút chính.
+1. Lưu lệnh nối nút bằng mã thông báo.
+1. Cài đặt plugin mạng Calico (nhà điều hành).
+1. Nối nút công nhân với nút chính (mặt phẳng điều khiển) bằng lệnh nối.
+1. Xác thực tất cả các thành phần và nút cụm.
+1. Cài đặt máy chủ số liệu Kubernetes
+1. Triển khai một ứng dụng mẫu và xác thực ứng dụng
+1. Tất cả các bước được đưa ra trong hướng dẫn này đều được tham khảo từ tài liệu chính thức của Kubernetes và các trang dự án GitHub có liên quan.
+
+Nếu bạn muốn hiểu chi tiết từng thành phần cụm, hãy tham khảo Kiến trúc Kubernetes toàn diện .
+
+Bây giờ hãy bắt đầu với việc thiết lập.
+
+
