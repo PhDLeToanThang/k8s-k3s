@@ -13,12 +13,12 @@ Phần này sẽ bao gồm các điều kiện tiên quyết cần phải có tr
 vSphere 6.7U3 (hoặc mới hơn) là điều kiện tiên quyết để sử dụng CSI và CPI tại thời điểm viết bài. Điều này có thể thay đổi trong tương lai và tài liệu sẽ được cập nhật để phản ánh bất kỳ thay đổi nào trong tuyên bố hỗ trợ này. Nếu bạn đang sử dụng phiên bản vSphere dưới 6.7 U3, bạn có thể nâng cấp vSphere lên 6.7U3 hoặc làm theo một trong các hướng dẫn dành cho các phiên bản vSphere cũ hơn . Dưới đây là hướng dẫn triển khai Kubernetes với kubeadm, sử dụng VCP - Triển khai Kubernetes bằng kubeadm với vSphere Cloud Provider (in-tree) .
 
 ## Yêu cầu về tường lửa
-Việc cung cấp quyền truy cập (các) nút chính của K8 vào giao diện quản lý vCenter là đủ, do các nhóm CPI và CSI được triển khai trên (các) nút chính. Nếu các thành phần này được triển khai trên các nút công nhân hay nói cách khác - các nút đó cũng sẽ cần quyền truy cập vào giao diện quản lý vCenter.
+Việc cung cấp quyền truy cập (các) nút chính của K8 vào giao diện quản lý vCenter là đủ, do các nhóm CPI và CSI được triển khai trên (các) nút chính. Nếu các thành phần này được triển khai trên các nút XỬ LÝ hay nói cách khác - các nút đó cũng sẽ cần quyền truy cập vào giao diện quản lý vCenter.
 
 Nếu bạn muốn sử dụng tính năng cung cấp khối lượng nhận biết cấu trúc liên kết và tính năng liên kết muộn bằng cách sử dụng zone/ region, nút cần khám phá cấu trúc liên kết của nó bằng cách kết nối với vCenter, để làm được điều này, mọi nút đều có thể giao tiếp với vCenter. Bạn có thể tắt tính năng tùy chọn này nếu bạn chỉ muốn mở nút chính vào giao diện quản lý vCenter.
 
 ## Hệ điều hành khách được đề xuất
-VMware khuyên bạn nên tạo mẫu máy ảo bằng Máy chủ PC 64-bit (AMD64) Guest OS Ubuntu 18.04.1 LTS (Bionic Beaver). Hãy kiểm tra nó trên VMware PartnerWeb . Mẫu này được sao chép để hoạt động như hình ảnh cơ sở cho cụm Kubernetes của bạn . Để biết hướng dẫn về cách thực hiện việc này, vui lòng tham khảo hướng dẫn được cung cấp trong bài đăng trên blog này của Myles Gray của VMware . Đảm bảo rằng quyền truy cập SSH được bật trên tất cả các nút. Điều này phải được thực hiện để chạy các lệnh trên cả nút chính và nút công nhân Kubernetes trong hướng dẫn này.
+VMware khuyên bạn nên tạo mẫu máy ảo bằng Máy chủ PC 64-bit (AMD64) Guest OS Ubuntu 18.04.1 LTS (Bionic Beaver). Hãy kiểm tra nó trên VMware PartnerWeb . Mẫu này được sao chép để hoạt động như hình ảnh cơ sở cho cụm Kubernetes của bạn . Để biết hướng dẫn về cách thực hiện việc này, vui lòng tham khảo hướng dẫn được cung cấp trong bài đăng trên blog này của Myles Gray của VMware . Đảm bảo rằng quyền truy cập SSH được bật trên tất cả các nút. Điều này phải được thực hiện để chạy các lệnh trên cả nút chính và nút XỬ LÝ Kubernetes trong hướng dẫn này.
 
 ## Yêu cầu phần cứng máy ảo
 Phần cứng máy ảo phải là phiên bản 15 trở lên. Đối với các yêu cầu về CPU và bộ nhớ của Máy ảo, kích thước phù hợp dựa trên yêu cầu về khối lượng công việc. VMware cũng khuyến nghị các máy ảo nên sử dụng bộ điều khiển VMware Paravirtual SCSI cho Đĩa chính trên Node VM . Đây phải là mặc định nhưng bạn nên kiểm tra. Cuối cùng, tham số disk.EnableUUID phải được đặt cho mỗi máy ảo nút. Bước này là cần thiết để VMDK luôn hiển thị UUID nhất quán cho VM , do đó cho phép đĩa được gắn đúng cách. Bạn không nên chụp ảnh nhanh các máy ảo nút CNS để tránh lỗi và hành vi không thể đoán trước.
@@ -64,11 +64,11 @@ Dưới đây là link các công cụ và hướng dẫn cài đặt cho các h
   
 ## Thiết lập máy ảo và hệ điều hành khách:
 Bước tiếp theo là cài đặt các thành phần Kubernetes cần thiết trên máy ảo Ubuntu OS. Một số thành phần phải được cài đặt trên tất cả các nút. 
-Trong các trường hợp khác, một số thành phần chỉ cần được cài đặt trên máy chủ và trong các trường hợp khác, chỉ cần cài đặt trên máy công nhân. 
+Trong các trường hợp khác, một số thành phần chỉ cần được cài đặt trên máy chủ và trong các trường hợp khác, chỉ cần cài đặt trên máy XỬ LÝ. 
 Trong mỗi trường hợp, vị trí cài đặt các thành phần sẽ được đánh dấu. 
 Tất cả các lệnh cài đặt và cấu hình phải được thực thi với quyền root. 
 Bạn có thể chuyển sang môi trường root bằng lệnh "sudo su". 
-Các bước thiết lập cần thiết trên tất cả các nút Phần sau đây nêu chi tiết các bước cần thiết trên cả nút chính và nút công nhân.
+Các bước thiết lập cần thiết trên tất cả các nút Phần sau đây nêu chi tiết các bước cần thiết trên cả nút chính và nút XỬ LÝ.
 
 ## Cài đặt VMTools (nếu cần)
 Để biết thêm thông tin về VMTools bao gồm cả cài đặt, vui lòng truy cập tài liệu chính thức.
@@ -121,7 +121,7 @@ Kiểm tra phiên bản Phần cứng VM sau khi chạy lệnh trên:
 HwVersion:           15
 ```
 ## Tắt Hoán đổi
-SSH vào tất cả các nút công nhân của K8 và vô hiệu hóa trao đổi trên tất cả các nút bao gồm cả nút chính. 
+SSH vào tất cả các nút XỬ LÝ của K8 và vô hiệu hóa trao đổi trên tất cả các nút bao gồm cả nút chính. 
 Đây là điều kiện tiên quyết cho kubeadm. 
 NẾU bạn đã làm theo hướng dẫn trước đó về cách tạo hình ảnh mẫu hệ điều hành thì bước này sẽ được triển khai.
 ```sh
@@ -189,7 +189,7 @@ Cgroup Driver: systemd
 ## Cài đặt Kubelet, Kubectl, Kubeadm
 Bước tiếp theo là cài đặt các thành phần Kubernetes chính trên mỗi nút.
 
-kubeadmlà lệnh khởi động lại cụm. Nó chạy trên nút chính và tất cả các nút công nhân. 
+kubeadmlà lệnh khởi động lại cụm. Nó chạy trên nút chính và tất cả các nút XỬ LÝ. 
 kubeletlà thành phần chạy trên tất cả các nút trong cụm và thực hiện các tác vụ như khởi động nhóm và vùng chứa. 
 kubectllà tiện ích dòng lệnh để giao tiếp với cụm của bạn. Nó chỉ chạy trên nút chính. 
 Đối với các bản phân phối Ubuntu, một phiên bản cụ thể có thể được cài đặt với phiên bản chỉ định của tên gói, 
@@ -217,8 +217,8 @@ Chúng tôi sẽ sử dụng flannel cho mạng nhóm trong ví dụ này, vì v
 ```sh
 # sysctl net.bridge.bridge-nf-call-iptables=1
 ```
-Điều đó hoàn thành các bước thiết lập chung trên cả nút chính và nút công nhân. 
-Bây giờ chúng ta sẽ xem xét các bước liên quan đến việc kích hoạt Giao diện nhà cung cấp đám mây vSphere (CPI) và Giao diện lưu trữ vùng chứa (CSI) trước khi sẵn sàng triển khai cụm Kubernetes của mình . Hãy chú ý đến nơi các bước được thực hiện, sẽ là trên nút chính hoặc nút công nhân.
+Điều đó hoàn thành các bước thiết lập chung trên cả nút chính và nút XỬ LÝ. 
+Bây giờ chúng ta sẽ xem xét các bước liên quan đến việc kích hoạt Giao diện nhà cung cấp đám mây vSphere (CPI) và Giao diện lưu trữ vùng chứa (CSI) trước khi sẵn sàng triển khai cụm Kubernetes của mình . Hãy chú ý đến nơi các bước được thực hiện, sẽ là trên nút chính hoặc nút XỬ LÝ.
 
 ## Cài đặt (các) nút chính Kubernetes
 Một lần nữa, các bước này chỉ được thực hiện trên bản gốc. 
@@ -279,7 +279,7 @@ Then you can join any number of worker nodes by running the following on each as
 kubeadm join 10.192.116.47:6443 --token y7yaev.9dvwxx6ny4ef8vlq \
     --discovery-token-ca-cert-hash sha256:[sha sum from above output]
 ```
-> **Lưu ý:** phần cuối cùng của đầu ra cung cấp lệnh nối các nút công nhân với nút chính trong cụm Kubernetes này.
+> **Lưu ý:** phần cuối cùng của đầu ra cung cấp lệnh nối các nút XỬ LÝ với nút chính trong cụm Kubernetes này.
 > Chúng tôi sẽ sớm quay lại bước đó. Tiếp theo, thiết lập tệp kubeconfig trên tệp chính để các lệnh Kubernetes CLI như kubectl có thể được sử dụng trên cụm Kubernetes mới tạo của bạn.
 ```sh
 # mkdir -p $HOME/.kube
@@ -328,19 +328,19 @@ kube-proxy-8dfm9                   1/1     Running   0          107s
 kube-scheduler-k8s-mstr            1/1     Running   0          49s
 ```
 ## Xuất cấu hình nút chính:
-Cuối cùng, cấu hình nút chính cần phải được xuất vì nó được sử dụng bởi các nút công nhân muốn tham gia vào nút chính.
+Cuối cùng, cấu hình nút chính cần phải được xuất vì nó được sử dụng bởi các nút XỬ LÝ muốn tham gia vào nút chính.
 ```sh
 # kubectl -n kube-public get configmap cluster-info -o jsonpath='{.data.kubeconfig}' > discovery.yaml
 ```
-Tệp discovery.yamlsẽ cần được sao chép vào /etc/kubernetes/discovery.yamlmỗi nút công nhân.
+Tệp discovery.yamlsẽ cần được sao chép vào /etc/kubernetes/discovery.yamlmỗi nút XỬ LÝ.
 
-## Cài đặt (các) nút công nhân Kubernetes:
-Thực hiện nhiệm vụ này trên các nút công nhân. Xác minh rằng bạn đã cài đặt Docker CE, kubeadm, v.v. trên các nút công nhân trước khi thử thêm chúng vào nút chính.
+## Cài đặt (các) nút XỬ LÝ Kubernetes:
+Thực hiện nhiệm vụ này trên các nút XỬ LÝ. Xác minh rằng bạn đã cài đặt Docker CE, kubeadm, v.v. trên các nút XỬ LÝ trước khi thử thêm chúng vào nút chính.
 
-Để (các) nút công nhân tham gia vào nút chính, bạn phải tạo một tệp yaml cấu hình kubeadm của nút công nhân. 
+Để (các) nút XỬ LÝ tham gia vào nút chính, bạn phải tạo một tệp yaml cấu hình kubeadm của nút XỬ LÝ. 
 > **Lưu ý:** nó đang được sử dụng /etc/kubernetes/discovery.yamllàm đầu vào cho khám phá chính. 
 > Chúng tôi sẽ hướng dẫn cách sao chép tệp từ trình chạy sang tệp chính trong bước tiếp theo.
-> Ngoài ra, hãy lưu ý rằng mã thông báo được sử dụng trong cấu hình nút công nhân giống như mã thông báo chúng tôi đặt trong kubeadminitmaster.yaml
+> Ngoài ra, hãy lưu ý rằng mã thông báo được sử dụng trong cấu hình nút XỬ LÝ giống như mã thông báo chúng tôi đặt trong kubeadminitmaster.yaml
 > cấu hình chính ở trên. Cuối cùng, một lần nữa chúng tôi xác định rõ rằng nhà cung cấp đám mây là bên ngoài đối với nhân viên vì chúng tôi sẽ sử dụng CPI mới.
 ```sh
 # tee /etc/kubernetes/kubeadminitworker.yaml >/dev/null <<EOF
@@ -365,7 +365,7 @@ Bạn có thể sao chép tệp discovery.yaml vào máy cục bộ của mình 
 Bây giờ bạn sẽ cần phải đăng nhập vào từng nút và sao chép tệp discovery.yamltừ /home/ubuntusang /etc/kubernetes. 
 Tệp discovery.yaml phải tồn tại /etc/kubernetes trên các nút.
 
-Sau khi hoàn thành bước đó, hãy chạy lệnh sau trên mỗi nút công nhân để nó tham gia vào nút chính (và các nút công nhân khác đã được tham gia) trong cụm:
+Sau khi hoàn thành bước đó, hãy chạy lệnh sau trên mỗi nút XỬ LÝ để nó tham gia vào nút chính (và các nút XỬ LÝ khác đã được tham gia) trong cụm:
 ```sh
 # kubeadm join --config /etc/kubernetes/kubeadminitworker.yaml
 ```
