@@ -800,7 +800,7 @@ spec:
           storage: 1Gi
 # kubectl create -f mongodb-statefulset.yaml
 statefulset.apps/mongo created
-
+```
 Xác minh rằng ứng dụng MongoDB đã được triển khai. Đợi các nhóm bắt đầu chạy và PVC được tạo cho mỗi bản sao.
 ```sh
 # kubectl get statefulset mongod
