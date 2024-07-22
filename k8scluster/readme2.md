@@ -506,15 +506,18 @@ Như bạn có thể thấy, tất cả các cấu hình cụm khóa sẽ có tr
 ## Câu hỏi thường gặp về Kubeadm
 
 **1. Làm cách nào để sử dụng Chứng chỉ CA tùy chỉnh với Kubeadm?**
+
 Theo mặc định, kubeadm tạo chứng chỉ CA của riêng mình. Tuy nhiên, nếu bạn muốn sử dụng chứng chỉ CA tùy chỉnh, chúng phải được đặt trong **/etc/kubernetes/pki** thư mục. Khi kubeadm được chạy, nó sẽ sử dụng các chứng chỉ hiện có nếu chúng được tìm thấy và sẽ không ghi đè lên chúng.
 
-**1. Làm cách nào để tạo lệnh Kubeadm Join?**
+**2. Làm cách nào để tạo lệnh Kubeadm Join?**
+
 Bạn có thể sử dụng kubeadm token create --print-join-commandlệnh để tạo lệnh nối.
 
 ## Phần kết luận
 Trong bài đăng này, chúng ta đã tìm hiểu cách cài đặt Kubernetes từng bước bằng kubeadm.
 
-Là một kỹ sư DevOps, việc hiểu biết về các thành phần của cụm Kubernetes là điều cần thiết. Với các công ty sử dụng dịch vụ Kubernetes được quản lý , chúng tôi bỏ lỡ việc tìm hiểu các khối xây dựng cơ bản của kubernetes.
+- Là một kỹ sư DevOps, việc hiểu biết về các thành phần của cụm Kubernetes là điều cần thiết. Với các công ty sử dụng dịch vụ Kubernetes được quản lý , chúng tôi bỏ lỡ việc tìm hiểu các khối xây dựng cơ bản của kubernetes.
 
-Thiết lập Kubeadm này rất phù hợp để học và triển khai với kubernetes.
-Ngoài ra, còn có nhiều cấu hình Kubeadm khác mà tôi không đề cập trong hướng dẫn này vì nó nằm ngoài phạm vi của hướng dẫn này. Vui lòng tham khảo tài liệu chính thức của Kubeadm . Bằng cách thiết lập toàn bộ cụm trong máy ảo, bạn có thể tìm hiểu tất cả các cấu hình thành phần cụm và khắc phục sự cố của cụm về lỗi thành phần.
+- Thiết lập Kubeadm này rất phù hợp để học và triển khai với kubernetes.
+
+- Ngoài ra, còn có nhiều cấu hình Kubeadm khác mà tôi không đề cập trong hướng dẫn này vì nó nằm ngoài phạm vi của hướng dẫn này. Vui lòng tham khảo tài liệu chính thức của Kubeadm . Bằng cách thiết lập toàn bộ cụm trong máy ảo, bạn có thể tìm hiểu tất cả các cấu hình thành phần cụm và khắc phục sự cố của cụm về lỗi thành phần.
