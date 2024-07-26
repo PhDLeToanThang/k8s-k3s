@@ -6,7 +6,7 @@
 Là một giải pháp lưu trữ phân tán và software-defined của VMware, cho phép tổ chức lưu trữ dữ liệu trên cụm máy chủ vSphere. 
 vSAN kết hợp các ổ đĩa ổ cứng và ổ SSD từ các máy chủ thành một hệ thống lưu trữ hiệu suất cao, tự động phân phối và quản lý dữ liệu.
 
-![image](https://github.com/user-attachments/assets/1ca451ac-bcdd-4cef-be8a-cb15e90b22f4)
+![image](https://github.com/user-attachments/assets/f2c9c25d-b326-40b7-b09a-b3f12dd4a360)
 
 **vSAN** bao gồm nhiều tính năng để tăng hiệu quả và khả năng khôi phục cho môi trường lưu trữ và tính toán dữ liệu:
 
@@ -28,17 +28,15 @@ vSAN kết hợp các ổ đĩa ổ cứng và ổ SSD từ các máy chủ thà
 16. **Data in transit encryption:**	Mã hóa khi truyền dữ liệu qua các máy chủ trong cụm (tất cả lưu lượng dữ liệu và siêu dữ liệu giữa các host)
 17. **SDK support	VMware vSAN SDK:** là phần mở rộng của VMware vSphere Management SDK. Bao gồm tài liệu, thư viện và code example giúp nhà phát triển tự động hóa việc cài đặt, cấu hình, giám sát và khắc phục sự cố của vSAN.
 
-** Các thành phần và định nghĩa tham gia trong kiến trúc vSAN:**
+**Các thành phần và định nghĩa tham gia trong kiến trúc vSAN:**
 
-** Disk Group (vSAN Original Storage Architecture):**
+**Disk Group (vSAN Original Storage Architecture):**
 
 - Trong mỗi máy chủ ESXi (tối thiểu 3 esxi node trong 1 cụm DRS, tối đa 24 esxi node dùng kèm GPU, hoặc tối đa 32 esxi node không có GPU trong 1 cụm DRS có license Standard vSAN, 20 ESXi nodes mỗi site với mô hình vSAN Stretched Clusters, tối đa 5 Disk group / 1 node - kiến trúc OSA hoặc tối đa 24 disk trên 1 Node - kiến trúc ESA) sẽ đóng góp các disk cục bộ của nó bào cụm vSAN, các disk này được sắp xếp thành các nhóm đĩa (disk group).
 - Mỗi disk group phải có 1 fash cache và 1 đến 7 disk dung lượng (HDD hoặc SSD).
 - Mỗi máy chủ ESXi có tối đa 5 disk group.
 
-![image](https://github.com/user-attachments/assets/f2c9c25d-b326-40b7-b09a-b3f12dd4a360)
-
-** Storage Pool (vSAN Express Storage Architecture):**
+**Storage Pool - vSAN Express Storage Architecture:**
 
 - Thay thế cho Disk Group trong kiến trúc OSA.
 - Mỗi máy chủ ESXi chứa một Storage Pool, mỗi thiết bị trong Storage Pool đều đóng góp vào vùng Cache và Capacity (dung lượng), khác với Disk group là phải xác định thiết bị cho tầng Cache và Capacity size.
@@ -283,7 +281,7 @@ Trong quá trình triển khai này, mặt phẳng điều khiển và các nút
 
 Nếu bạn dự định sử dụng ổ đĩa tệp (ổ đĩa RWX), bạn nên định cấu hình miền dịch vụ tệp vSAN để đặt máy chủ tệp trên site hoạt động (site ngầm định). Điều này làm giảm độ trễ lưu lượng truy cập chéo site và mang lại hiệu suất tốt hơn cho các ứng dụng sử dụng khối lượng tệp.
 
-**Yêu cầu triển khai 1**
+**Yêu cầu triển khai 1:**
 
     + Vị trí nút:
     + Mặt phẳng điều khiển và các nút công nhân nằm trên site chính. Chúng đủ linh hoạt để chuyển đổi dự phòng sang site khác nếu site chính bị lỗi.
@@ -336,7 +334,7 @@ Bảng sau mô tả các tình huống chuyển đổi dự phòng tiềm ẩn c
     + Chính sách lưu trữ Force Provisioning:	Đã bật
     + vSphere HA: Đã bật
 
-** Các kịch bản chuyển đổi dự phòng tiềm năng khi triển khai 2:**
+**Các kịch bản chuyển đổi dự phòng tiềm năng khi triển khai 2:**
 
 Bảng sau mô tả các tình huống chuyển đổi dự phòng tiềm ẩn có thể xảy ra khi bạn triển khai cụm Kubernetes bằng mô hình Triển khai 2.
 
@@ -352,7 +350,7 @@ Toàn bộ Site chính và tất cả các máy chủ trên Site đều bị l�
     + Dự kiến ​​sẽ có thời gian ngừng hoạt động một phần đối với các nhóm chạy trên nút công nhân trên Site chính.
     + Các nhóm được triển khai trên các nút công nhân trên site phụ không bị ảnh hưởng.
 
-Một số máy chủ bị lỗi trên site phụ.	Các máy ảo nút và nhóm chạy trên máy ảo nút khởi động lại trên một máy chủ khác.
+Một số máy chủ bị lỗi trên site phụ: Các máy ảo nút và nhóm chạy trên máy ảo nút khởi động lại trên một máy chủ khác.
 
 Toàn bộ site phụ và tất cả các máy chủ trên site đó đều bị lỗi.	
     + Mặt phẳng điều khiển Kubernetes không bị ảnh hưởng.
@@ -368,25 +366,24 @@ Lỗi mạng liên site xảy ra.
 
 - Trong mô hình triển khai này, bạn có thể đặt hai nút mặt phẳng điều khiển trên site chính và một nút mặt phẳng điều khiển trên site phụ. Triển khai HA Proxy trên site chính. Các nút công nhân có thể ở trên bất kỳ Site nào.
 
-** Yêu cầu triển khai 3:**
+**Yêu cầu triển khai 3:**
 
 Bạn có thể sử dụng mô hình triển khai này nếu bạn có các tài nguyên như nhau ở cả miền lỗi chính hoặc miền ưu tiên và miền lỗi thứ cấp, không ưu tiên và bạn muốn sử dụng phần cứng nằm ở cả hai miền lỗi. Vì cả hai miền lỗi đều có một số khối lượng công việc đang chạy nên trong trường hợp Site bị lỗi hoàn toàn, mô hình triển khai này sẽ giúp khôi phục nhanh hơn.
 
 Mô hình này yêu cầu các quy tắc chính sách DRS cụ thể. Một quy tắc để chỉ định mối quan hệ giữa hai nút mặt phẳng điều khiển và site chính và một quy tắc khác về mối quan hệ giữa nút mặt phẳng điều khiển thứ ba và site phụ.
 
-- Vị trí nút	
-    + Hai nút mặt phẳng điều khiển trên Site chính.
-    + Một nút mặt phẳng điều khiển trên Site phụ.
-    + HA Proxy trên Site chính.
-    + Nút công nhân trên bất kỳ Site nào.
-      
-- Không thể chịu được tải:	Ít nhất là FTT1
-- DRS:	Đã bật
-- Khả năng chịu đựng sự cố của site:	có 2 Site HA
-- Chính sách lưu trữ Force Provisioning:	Đã bật
-- vSphere HA:	Đã bật
+    - Vị trí nút:
+      + Hai nút mặt phẳng điều khiển trên Site chính.
+      + Một nút mặt phẳng điều khiển trên Site phụ.
+      + HA Proxy trên Site chính.
+      + Nút công nhân trên bất kỳ Site nào.  
+    - Không thể chịu được tải: Ít nhất là FTT1
+    - DRS: Đã bật
+    - Khả năng chịu đựng sự cố của site: có 2 Site HA
+    - Chính sách lưu trữ Force Provisioning: Đã bật
+    - vSphere HA: Đã bật
 
-** Các kịch bản chuyển đổi dự phòng tiềm năng khi triển khai 3:**
+**Các kịch bản chuyển đổi dự phòng tiềm năng khi triển khai 3:**
 
 Bảng sau mô tả các tình huống chuyển đổi dự phòng tiềm ẩn có thể xảy ra khi bạn sử dụng mô hình Triển khai 3.
 
