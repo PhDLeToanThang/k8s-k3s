@@ -2,7 +2,8 @@
 
 ## 4.1. vSphere vSAN và VMware vVOLUME là gì ?
 
-### 4.1.1. vSAN (Virtual SAN): 
+### 4.1.1. vSAN (Virtual SAN):
+
 Là một giải pháp lưu trữ phân tán và software-defined của VMware, cho phép tổ chức lưu trữ dữ liệu trên cụm máy chủ vSphere. 
 vSAN kết hợp các ổ đĩa ổ cứng và ổ SSD từ các máy chủ thành một hệ thống lưu trữ hiệu suất cao, tự động phân phối và quản lý dữ liệu.
 
@@ -10,23 +11,39 @@ vSAN kết hợp các ổ đĩa ổ cứng và ổ SSD từ các máy chủ thà
 
 **vSAN** bao gồm nhiều tính năng để tăng hiệu quả và khả năng khôi phục cho môi trường lưu trữ và tính toán dữ liệu:
 
-1​. **Shared storage support:**	Hỗ trợ các tính năng của Vmware như HA, vMotion, DRS (các tinh năng này yêu cầu phải có một bộ lưu trữ dùng chung)
-2​. **On-disk format	vSAN:** cung cấp các định dạng đĩa giúp hỗ trợ quản lí bản sao và ảnh chụp nhanh có khả năng mở rộng cao
-3​. **All-flash and hybrid configurations:** vSAN có thể cấu hình cho cụm All Flash và Hybrid
-4​. **Fault domains:** vSAN hỗ trợ cấu hình miền lỗi để bảo vệ máy chủ khỏi lỗi rack hoặc chassis khi cụm vSAN kéo dài trên nhiều rack hoặc chassis
-5​. **File service:**	Cho phep tạo và chia sẻ tệp trong kho dữ liệu vSAN
-6​. **iSCSI target service:**	Cho phép máy chủ vật lý nằm bên ngoài cụm vSAN truy cập vào kho dữ liệu vSAN
-7​. **Stretched cluster and Two node cluster:**	Hỗ trợ kéo dài cụm vSAN trên 2 vị trí địa lý
-8​. **Support for Windows Server Failover Clusters (WSFC):**	Hỗ trợ SCSI3-PR ở cấp độ đĩa ảo mà cụm WSFC yêu cầu để cấu chia sẻ ổ đĩa chung cho các máy ảo trên kho dữ liệu vSAN
+1​. **Shared storage support:**	Hỗ trợ các tính năng của Vmware như HA, vMotion, DRS (các tinh năng này yêu cầu phải có một bộ lưu trữ dùng chung).
+
+2​. **On-disk format	vSAN:** cung cấp các định dạng đĩa giúp hỗ trợ quản lí bản sao và ảnh chụp nhanh có khả năng mở rộng cao.
+
+3​. **All-flash and hybrid configurations:** vSAN có thể cấu hình cho cụm All Flash và Hybrid.
+
+4​. **Fault domains:** vSAN hỗ trợ cấu hình miền lỗi để bảo vệ máy chủ khỏi lỗi rack hoặc chassis khi cụm vSAN kéo dài trên nhiều rack hoặc chassis.
+
+5​. **File service:**	Cho phep tạo và chia sẻ tệp trong kho dữ liệu vSAN.
+
+6​. **iSCSI target service:**	Cho phép máy chủ vật lý nằm bên ngoài cụm vSAN truy cập vào kho dữ liệu vSAN.
+
+7​. **Stretched cluster and Two node cluster:**	Hỗ trợ kéo dài cụm vSAN trên 2 vị trí địa lý.
+
+8​. **Support for Windows Server Failover Clusters (WSFC):**	Hỗ trợ SCSI3-PR ở cấp độ đĩa ảo mà cụm WSFC yêu cầu để cấu chia sẻ ổ đĩa chung cho các máy ảo trên kho dữ liệu vSAN.
+
 9​. **vSAN health service:**	Được cấu hình sẵn để kiểm tra sức khỏe vSAN, khác phục sự cố, chuẩn đoán nguyên nhân gây ra sự cố, xác định các rủi ro tìm ẩn,..
-10​. **vSAN performance service:** Là các biểu đồ thống kê được sử dụng để giám sát IOPS, throughput, latency, … của cụm vSAN, máy chủ, disk group, máy ảo
+
+10​. **vSAN performance service:** Là các biểu đồ thống kê được sử dụng để giám sát IOPS, throughput, latency, … của cụm vSAN, máy chủ, disk group, máy ảo.
+
 11​. **Integration with vSphere storage features:**	Tích hợp với các tính năng mà vSphere thường sử dụng với bộ lưu trữ VMFS, NFS (snapshot, linked clone, vShphere Replication).
-12​. **Virtual Machine Storage Policies:**	vSAN sử dụng các chính sách lưu trữ để hỗ trợ phương pháp quản lý lưu trữ lấy VM làm trung tâm
-13​. **Rapid provisioning:**	Cung cấp nhanh chóng dung lượng lưu trữa trong vCenter Server trong quá trình tạo và triển khai máy ảo
-14. **Deduplication and compression:**	Thực hiện nén và chống trùng lặp ở cấp độ khối để tiết kiệm dung lượng lưu trữ (all flash)
-15. **Data at rest encryption:**	Mã hoá dữ liệu khi lưu trữ (dữ liệu được xử ly cuối cùng, sau khi thực hiện các quá trình xử lý khác như chống trùng lặp)
-16. **Data in transit encryption:**	Mã hóa khi truyền dữ liệu qua các máy chủ trong cụm (tất cả lưu lượng dữ liệu và siêu dữ liệu giữa các host)
-17. **SDK support	VMware vSAN SDK:** là phần mở rộng của VMware vSphere Management SDK. Bao gồm tài liệu, thư viện và code example giúp nhà phát triển tự động hóa việc cài đặt, cấu hình, giám sát và khắc phục sự cố của vSAN.
+
+12​. **Virtual Machine Storage Policies:**	vSAN sử dụng các chính sách lưu trữ để hỗ trợ phương pháp quản lý lưu trữ lấy VM làm trung tâm.
+
+13​. **Rapid provisioning:**	Cung cấp nhanh chóng dung lượng lưu trữa trong vCenter Server trong quá trình tạo và triển khai máy ảo.
+
+14. **Deduplication and compression:**	Thực hiện nén và chống trùng lặp ở cấp độ khối để tiết kiệm dung lượng lưu trữ (all flash).
+    
+16. **Data at rest encryption:**	Mã hoá dữ liệu khi lưu trữ (dữ liệu được xử ly cuối cùng, sau khi thực hiện các quá trình xử lý khác như chống trùng lặp).
+    
+18. **Data in transit encryption:**	Mã hóa khi truyền dữ liệu qua các máy chủ trong cụm (tất cả lưu lượng dữ liệu và siêu dữ liệu giữa các host).
+    
+20. **SDK support	VMware vSAN SDK:** là phần mở rộng của VMware vSphere Management SDK. Bao gồm tài liệu, thư viện và code example giúp nhà phát triển tự động hóa việc cài đặt, cấu hình, giám sát và khắc phục sự cố của vSAN.
 
 **Các thành phần và định nghĩa tham gia trong kiến trúc vSAN:**
 
@@ -64,7 +81,7 @@ _Ví dụ bên dưới là một đối tượng (vmdk) có chính sách lưu tr
 
 ![image](https://github.com/user-attachments/assets/b4337df9-2fb2-4603-b0d1-3d67b3528caa)
 
-Kho dữ liệu vSAN chứa các loại đối tượng sau:
+**Kho dữ liệu vSAN chứa các loại đối tượng sau:**
 
 **VM Home Namespace:** lưu trữ các tệp cấu hình máy ảo như .vmx, log, .vmdk, snapshot delta
 
@@ -98,6 +115,7 @@ Mỗi VM có thể được gán chính sách riêng cho nó, tùy thuộc vào 
 
 **vSphere PowerCLI:** - VMware vSphere PowerCLI bổ sung hỗ trợ tập lệnh dòng lệnh cho vSAN, để giúp bạn tự động hóa các tác vụ quản lý và cấu hình.
 <hr></hr>
+
 #### Về thiết bị lưu trữ:
 
 **Kiến trúc OSA**
@@ -322,7 +340,7 @@ Bảng sau mô tả các tình huống chuyển đổi dự phòng tiềm ẩn c
 
 - Với mô hình này, đặt các nút mặt phẳng điều khiển trên site chính và các nút công nhân có thể được trải rộng trên site chính và phụ. Bạn triển khai HA Proxy trên site chính.
 
-** Yêu cầu triển khai 2:**
+**Yêu cầu triển khai 2:**
 
     + Vị trí nút
     + Các nút mặt phẳng điều khiển: trên Site chính.
