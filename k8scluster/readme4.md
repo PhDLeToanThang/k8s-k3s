@@ -114,6 +114,7 @@ Mỗi thành phần của một đối tượng sẽ có 1 hoặc nhiều phiế
 Mỗi VM có thể được gán chính sách riêng cho nó, tùy thuộc vào nhu cầu. Nếu không áp dụng chính sách lưu trữ khi triển khai máy ảo, vSAN sẽ tự động gán chính sách vSAN mặc định với Failures to tolerate được đặt thành 1, một disk stripe cho từng đối tượng và đĩa ảo được cung cấp ở chế độ thin provisioned .
 
 **vSphere PowerCLI:** - VMware vSphere PowerCLI bổ sung hỗ trợ tập lệnh dòng lệnh cho vSAN, để giúp bạn tự động hóa các tác vụ quản lý và cấu hình.
+
 <hr></hr>
 
 #### Về thiết bị lưu trữ:
@@ -136,6 +137,7 @@ Mỗi VM có thể được gán chính sách riêng cho nó, tùy thuộc vào 
 1. Không passthrought các ổ đĩa non-vSAN tới máy ảo dưới dạng RDM (Raw Device Mapping)
 1. Nếu các ổ non- vSAN sử dụng VMFS thì chỉ sử dụng các VMFS datatore này cho scratch, logging, core dumps
 
+<hr></hr>
 
 **Kiến trúc ESA:**
 
@@ -167,6 +169,8 @@ Mỗi VM có thể được gán chính sách riêng cho nó, tùy thuộc vào 
 1. Sau khi bật tính năng vSAN trên một cluster cần phải gán cho cluster đó giấy phép vSAN thích hợp
 1. Giấy phép vSAN được tính bằng tổng số CPU trong các máy chủ tham gia vào cụm. Ví dụ: một cụm vSAN chứa 4 máy chủ, mỗi máy chủ có 8 CPU, hãy gán cho cụm đó một giấy phép vSAN có dung lượng tối thiểu là 32 CPU.
 1. Khi giấy phép Evaluation hết hạn, bạn có thể sử dụng các tài nguyên trên cluster, tuy nhiên không thể cấu hình thêm ổ đĩa, Disk Group,..
+
+<hr></hr>
 
 ## 4.2.1. Các kiến trúc và mô hình xây dựng vSAN Cluster:
 
@@ -207,9 +211,13 @@ Mỗi VM có thể được gán chính sách riêng cho nó, tùy thuộc vào 
 
 ![image](https://github.com/user-attachments/assets/6bc6c1d0-d46a-4f88-85f9-437bf5213d21)
 
+<hr></hr>
+
 ### 4.1.2. vVols (Virtual Volumes):
 Là một công nghệ lưu trữ mạnh mẽ của VMware, cho phép quản lý dữ liệu ở mức độ đơn vị cấp VM thay vì ở mức LUN hoặc tập tin. 
 vVols cho phép VMs tận dụng các tính năng lưu trữ nâng cao như luồng dữ liệu thẳng đến ổ đĩa và tích hợp mạnh mẽ với VMware vSphere.
+
+<hr></hr>
 
 ### 4.1.3. vSAN DataStorage khác với DataStorage trên lớp vSphere 8:
 
@@ -231,6 +239,8 @@ Trong ngữ cảnh của VMware, vSAN Datastore và Datastore trên lớp vSpher
 
 1. vSAN Datastore là một datastore đặc biệt được tạo ra từ cụm vSAN, trong khi Datastore trên lớp vSphere 8.0 đề cập đến mọi loại lưu trữ được sử dụng trong môi trường vSphere.
 1. vSAN Datastore là một phần của lớp lưu trữ vSAN, cung cấp lưu trữ phân tán và hiệu suất cao, trong khi Datastore trên lớp vSphere bao gồm tất cả các loại lưu trữ khác nhau được sử dụng trong môi trường ảo hóa vSphere.
+
+<hr></hr>
 
 ## 4.2.2. Triển khai Kubernetes và Persistent Volumes trên vSAN Stretched Cluster:
 
