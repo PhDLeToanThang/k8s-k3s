@@ -55,7 +55,6 @@ Kasten K10 sử dụng các Database nội bộ tích hợp sẵn bên trong ki�
 * Dung lượng (Capacity): Với 14TB dữ liệu gốc, áp dụng chính sách lưu trữ (Retention) 30 ngày kèm incremental và tính năng nén (Compression) / chống trùng lặp (Deduplication) của Kasten, bạn cần chuẩn bị dung lượng khả dụng trên MinIO từ 20TB đến 25TB cho cụm Prod. Cụm Dev cần khoảng 1.5TB đến 2TB.
 * Tốc độ Ghi (Write IOPS): Đảm bảo hạ tầng ổ đĩa trên 4 Node Oracle Linux chạy MinIO có cấu hình RAID (như RAID 60 hoặc MinIO Erasure Coding công thức $N/2$) đạt tốc độ ghi tuần tự ổn định từ 300 MB/s đến 500 MB/s.
 
-
 ------------------------------
 ## 6. Kiến trúc Kiểm thử Tự động (SureBackup / SureRestore)
 Đối với môi trường container Kubernetes, khái niệm SureBackup của máy ảo vSphere được Kasten K10 hiện thực hóa bằng tính năng K10 Disaster Recovery (DR) kết hợp Automated Restore Testing: [11, 15] 
@@ -78,7 +77,7 @@ Kasten K10 sử dụng các Database nội bộ tích hợp sẵn bên trong ki�
    3. Tạo S3 Bucket trên MinIO: Tạo sẵn các Bucket riêng biệt cho Prod và Dev trên cụm MinIO kèm tài khoản Access Key và Secret Key có quyền ghi đọc tuyệt đối. Bật tính năng Object Locking (WORM) trên MinIO nếu bạn muốn kích hoạt khả năng chống Ransomware (Immutable Backups) của Kasten. [2, 3, 8, 15] 
 
 Nếu bạn đã sẵn sàng, hãy cho tôi biết loại ứng dụng / database nào chính (như MySQL, PostgreSQL, hay ứng dụng Web stateless...) đang chạy trên cụm K8s Prod để tôi hỗ trợ cung cấp Mẫu Blueprint (Application Hook) giúp Kasten thực hiện backup đóng băng ứng dụng (Quiesce) một cách toàn vẹn nhất nhé!
-
+```
 [1] [https://www.veeam.com](https://www.veeam.com/products/cloud/kubernetes-data-protection.html)
 [2] [https://docs.kasten.io](https://docs.kasten.io/8.0.2/install/vmware/vsphere)
 [3] [https://helpcenter.veeam.com](https://helpcenter.veeam.com/docs/vbr/kasten_integration/data_recovery.html)
@@ -97,7 +96,7 @@ Nếu bạn đã sẵn sàng, hãy cho tôi biết loại ứng dụng / databas
 [16] [https://docs.kasten.io](https://docs.kasten.io/8.0.4/references/best-practices/)
 [17] [https://www.youtube.com](https://www.youtube.com/watch?v=ZP33cSRcYPA)
 [18] [https://www.veeam.com](https://www.veeam.com/blog/kasten-k10-kubernetes-application-mobility.html)
-
+```
 ---
 
 # Phần 2. Demo hoặc Hand On Labs K10:
@@ -108,29 +107,29 @@ Dưới đây là các kênh chính thức bạn có thể truy cập ngay:
 ## 1. Hệ thống Veeam Hands-On Labs (Môi trường Lab thực tế)
 Đây là môi trường web-based giúp bạn tự thao tác trên một cụm Lab được cấu hình sẵn hạ tầng. Hệ thống sẽ tự động khởi tạo Cluster cho bạn thực hành gõ lệnh và cấu hình trên giao diện K10. [1, 2] 
 
-* Veeam Hands-On Labs (Tổng hợp): Truy cập [Veeam Hands-On-Labs Experience](https://go.veeam.com/hands-on-lab-experience?product=K10) và chọn bộ sản phẩm K10. [2] 
+* **Veeam Hands-On Labs (Tổng hợp)**: Truy cập [Veeam Hands-On-Labs Experience](https://go.veeam.com/hands-on-lab-experience?product=K10) và chọn bộ sản phẩm K10. [2] 
 
-* Các bài Lab nổi bật:
-* Test Drive Kasten K10: Bài lab tổng quan giúp bạn tìm hiểu kiến trúc, cách Kasten khám phá (Discover) ứng dụng và lập chính sách backup.
-   * Kubernetes App Mobility: Bài lab nâng cao hướng dẫn cách di chuyển ứng dụng (Mobility) từ cụm K8s này sang cụm K8s khác (rất phù hợp để bạn thử nghiệm mô hình đồng bộ từ Prod sang Dev).
-   * Kasten K10 & Red Hat OpenShift / VMware: Thực hành cấu hình Storage Class, Snapshot Class và thiết lập bảo vệ toàn diện dữ liệu. [3, 4] 
+* **Các bài Lab nổi bật**:
+* **Test Drive Kasten K10**: Bài lab tổng quan giúp bạn tìm hiểu kiến trúc, cách Kasten khám phá (Discover) ứng dụng và lập chính sách backup.
+   * **Kubernetes App Mobility**: Bài lab nâng cao hướng dẫn cách di chuyển ứng dụng (Mobility) từ cụm K8s này sang cụm K8s khác (rất phù hợp để bạn thử nghiệm mô hình đồng bộ từ Prod sang Dev).
+   * **Kasten K10 & Red Hat OpenShift / VMware**: Thực hành cấu hình Storage Class, Snapshot Class và thiết lập bảo vệ toàn diện dữ liệu. [3, 4] 
 
 ## 2. Kasten K10 Interactive Demos (Demo tương tác nhanh)
 Nếu bạn không muốn mất thời gian chờ khởi tạo tài nguyên Lab hoàn chỉnh và chỉ muốn xem nhanh luồng giao diện UI xử lý thế nào, bạn có thể sử dụng trang Demo mô phỏng (Click-through). [5] 
 
-* Trang mục lục Demo: Truy cập [Veeam Kasten Demos Catalog](https://veeamkasten.dev/demos/).
+* **Trang mục lục Demo**: Truy cập [Veeam Kasten Demos Catalog](https://veeamkasten.dev/demos/).
 * Bài học đề xuất cho mô hình của bạn: Chọn bài [Getting Started with Kasten K10 by Veeam Interactive Demo](https://veeamkasten.dev/demo-getting-started). Nó sẽ hướng dẫn bạn qua 4 bước: Giới thiệu hệ thống, Quét tìm ứng dụng (Discovering), Thiết lập chính sách Backup (Backup Policies) và Các tính năng nâng cao (Advanced Features). [6, 7] 
 
 ## 3. Video Walkthrough & Mã nguồn mẫu (Dành cho tự học)
 
-* Kênh Youtube: Bạn có thể tham khảo playlist [Kasten K10 Product Demos trên YouTube](https://www.youtube.com/playlist?list=PLYAs0sHjyBtmQ7m7DoSsS-b1M3SozJ9Hs) để xem các chuyên gia Veeam demo trực tiếp tính năng Instant Recovery với vSphere FCD và MinIO. [8, 9] 
+*** Kênh Youtube**: Bạn có thể tham khảo playlist [Kasten K10 Product Demos trên YouTube](https://www.youtube.com/playlist?list=PLYAs0sHjyBtmQ7m7DoSsS-b1M3SozJ9Hs) để xem các chuyên gia Veeam demo trực tiếp tính năng Instant Recovery với vSphere FCD và MinIO. [8, 9] 
 
-* Lộ trình Onboarding: Cộng đồng Veeam có cung cấp một bài viết hướng dẫn từng bước rất chi tiết từ khâu lập kế hoạch, cài đặt bằng Helm cho đến vận hành nâng cao tại [Onboarding for Veeam Kasten for Kubernetes](https://community.veeam.com/onboarding-for-veeam-kasten-for-kubernetes-179/onboarding-for-veeam-kasten-for-kubernetes-10535). [10] 
+* **Lộ trình Onboarding**: Cộng đồng Veeam có cung cấp một bài viết hướng dẫn từng bước rất chi tiết từ khâu lập kế hoạch, cài đặt bằng Helm cho đến vận hành nâng cao tại [Onboarding for Veeam Kasten for Kubernetes](https://community.veeam.com/onboarding-for-veeam-kasten-for-kubernetes-179/onboarding-for-veeam-kasten-for-kubernetes-10535). [10] 
 
 ------------------------------
-Khuyến nghị thực hiện: Bạn nên đăng ký ngay một tài khoản miễn phí trên trang Veeam Hands-On Labs để thử tạo chính sách Backup ứng dụng mẫu và xuất (Export) dữ liệu sang một kho lưu trữ Object Storage giả lập. [2] 
+**Khuyến nghị thực hiện:** Bạn nên đăng ký ngay một tài khoản miễn phí trên trang Veeam Hands-On Labs để thử tạo chính sách Backup ứng dụng mẫu và xuất (Export) dữ liệu sang một kho lưu trữ Object Storage giả lập. [2] 
 Khi bạn làm Lab, nếu gặp khó khăn ở bước cấu hình StorageClass snapshot hoặc kết nối S3 Profile, hãy nhắn tôi để tôi hướng dẫn trực tiếp các câu lệnh (CLI) tương ứng nhé!
-
+```
 [1] [https://instruqt.com](https://instruqt.com/blog/demand-gen-hands-on-learning-platform)
 [2] [https://go.veeam.com](https://go.veeam.com/hands-on-lab-experience?product=K10)
 [3] [https://go.veeam.com](https://go.veeam.com/hands-on-lab-experience?product=K10)
@@ -141,7 +140,7 @@ Khi bạn làm Lab, nếu gặp khó khăn ở bước cấu hình StorageClass 
 [8] [https://www.youtube.com](https://www.youtube.com/playlist?list=PLYAs0sHjyBtmQ7m7DoSsS-b1M3SozJ9Hs)
 [9] [https://www.youtube.com](https://www.youtube.com/watch?v=-UF68kJjWsM&t=38)
 [10] [https://community.veeam.com](https://community.veeam.com/onboarding-for-veeam-kasten-for-kubernetes-179/onboarding-for-veeam-kasten-for-kubernetes-10535)
-
+```
 
 # Phần 3. Bảng khảo sát đánh giá xác định các yêu cầu đáp ứng K10 dùng cho K8s ?
 
@@ -215,11 +214,10 @@ Phần này thu thập cấu trúc định tuyến lớp mạng để đảm b�
 | **Kiểm soát Tường lửa Hạ tầng (Infrastructure Firewalls)** *(Có tường lửa cứng/Security Group chặn giao tiếp giữa các Node thuộc các Vùng khác nhau không?)* | | |
 | **Dịch vụ Mesh hoặc Proxy Tầng Ứng dụng** *(Cluster có cài đặt Service Mesh - ví dụ: Istio, Linkerd làm thay đổi luồng đi của mTLS không?)* | | |
 
-
 ---
 
 ### Phần 4: Đích đến Sao lưu & Lưu trữ Đối tượng (Location Profiles)
-Kasten K10 xuất các bản snapshot ra một hệ thống lưu trữ đối tượng bên ngoài để lưu trữ dài hạn và phục hồi sau thảm họa (Disaster Recovery).
+Kasten K10 xuất các bản snapshot ra một hệ thống lưu trữ đối tượng bên ngoài để lưu trữ dài hạn và phục hồi sau thảm họa **(Disaster Recovery).**
 
 1. **Nhà cung cấp Lưu trữ Đối tượng Đích:**
    * [ ] AWS S3
@@ -268,12 +266,12 @@ Việc hiểu rõ quy mô và đặc thù của khối lượng công việc gi�
 💡 Tại sao 2 bảng bổ sung phụ lục 2.1 và 3.1 này lại bắt buộc phải có cho K10?
 
 Để giúp bạn hiểu sâu hơn khi làm việc với đội nhóm hạ tầng, dưới đây là lý do kỹ thuật đằng sau:
-1. Rủi ro từ volumeBindingMode: Immediate (Storage Topology):
-Nếu StorageClass của bạn để chế độ Immediate, khi K10 khôi phục (Restore) một ứng dụng sang một Node mới, Volume có thể bị hệ thống cấp phát ngẫu nhiên ở Zone A, trong khi Pod của ứng dụng lại bị scheduler đẩy sang Zone B. 
-Kết quả là Pod sẽ bị kẹt vĩnh viễn ở trạng thái ContainerCreating hoặc VolumeAffinity do không thể kéo đĩa băng qua các Zone khác nhau. Chúng ta cần cấu hình WaitForFirstConsumer.
+1. **Rủi ro từ volumeBindingMode: Immediate (Storage Topology):**
+**Nếu StorageClass** của bạn để chế độ Immediate, khi K10 khôi phục (Restore) một ứng dụng sang một Node mới, Volume có thể bị hệ thống cấp phát ngẫu nhiên ở Zone A, trong khi Pod của ứng dụng lại bị scheduler đẩy sang Zone B. 
+Kết quả là Pod sẽ bị kẹt vĩnh viễn ở trạng thái **ContainerCreating** hoặc **VolumeAffinity** do không thể kéo đĩa băng qua các Zone khác nhau. Chúng ta cần cấu hình **WaitForFirstConsumer.**
 
-2. Thách thức từ Multi-Zone Cluster (Storage Topology):
+2.**Thách thức từ Multi-Zone Cluster (Storage Topology):**
 Kasten K10 cần biết driver CSI có hiểu được các nhãn (Labels) về vùng địa lý hay không (topology.kubernetes.io/zone). 
 Nếu không, K10 không thể đưa ra quyết định thông minh khi chỉ định vị trí tạo Snapshot hoặc khôi phục dữ liệu gốc.
 
-3. Luồng dữ liệu của K10 Data Mover (Network Topology):Kasten K10 không chỉ chạy ở Node Master. Khi có lệnh sao lưu, K10 sẽ tự động dựng lên các Pod tạm thời gọi là K10 Data Movers rải rác trên các Worker Node để đọc dữ liệu đĩa và đẩy ra Cloud Object Storage (S3). Nếu mạng của bạn là hạ tầng Hybrid (Lai) hoặc có tường lửa chặn cổng (ví dụ: chặn HTTPS/443 hoặc các cổng lưu trữ nội bộ) giữa các Subnet của Worker Node, tiến trình sao lưu sẽ bị treo ở mức 0% và báo lỗi Timeout.
+3. **Luồng dữ liệu của K10 Data Mover (Network Topology)**: Kasten K10 không chỉ chạy ở Node Master. Khi có lệnh sao lưu, K10 sẽ tự động dựng lên các Pod tạm thời gọi là K10 Data Movers rải rác trên các Worker Node để đọc dữ liệu đĩa và đẩy ra Cloud Object Storage (S3). Nếu mạng của bạn là hạ tầng Hybrid (Lai) hoặc có tường lửa chặn cổng (_ví dụ: chặn HTTPS/443 hoặc các cổng lưu trữ nội bộ_) giữa các Subnet của Worker Node, tiến trình sao lưu sẽ bị treo ở mức 0% và báo lỗi Timeout.
