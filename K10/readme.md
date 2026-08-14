@@ -122,7 +122,7 @@ Nếu bạn không muốn mất thời gian chờ khởi tạo tài nguyên Lab 
 
 ## 3. Video Walkthrough & Mã nguồn mẫu (Dành cho tự học)
 
-*** Kênh Youtube**: Bạn có thể tham khảo playlist [Kasten K10 Product Demos trên YouTube](https://www.youtube.com/playlist?list=PLYAs0sHjyBtmQ7m7DoSsS-b1M3SozJ9Hs) để xem các chuyên gia Veeam demo trực tiếp tính năng Instant Recovery với vSphere FCD và MinIO. [8, 9] 
+***Kênh Youtube**: Bạn có thể tham khảo playlist [Kasten K10 Product Demos trên YouTube](https://www.youtube.com/playlist?list=PLYAs0sHjyBtmQ7m7DoSsS-b1M3SozJ9Hs) để xem các chuyên gia Veeam demo trực tiếp tính năng Instant Recovery với vSphere FCD và MinIO. [8, 9] 
 
 * **Lộ trình Onboarding**: Cộng đồng Veeam có cung cấp một bài viết hướng dẫn từng bước rất chi tiết từ khâu lập kế hoạch, cài đặt bằng Helm cho đến vận hành nâng cao tại [Onboarding for Veeam Kasten for Kubernetes](https://community.veeam.com/onboarding-for-veeam-kasten-for-kubernetes-179/onboarding-for-veeam-kasten-for-kubernetes-10535). [10] 
 
