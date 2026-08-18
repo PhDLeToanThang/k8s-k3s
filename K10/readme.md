@@ -33,19 +33,23 @@ Kasten K10 sử dụng các Database nội bộ tích hợp sẵn bên trong ki�
 | Ephemeral Storage trên Node | Tối thiểu 20-30 GB tự do | 100 GB không gian trống trên mỗi Ubuntu VM (để tránh lỗi disk-pressure khi xuất/nhập dữ liệu snapshot). |
 
 ------------------------------
-## 4. Cấu hình Mạng (Network Bandwidth) & Hạ tầng Proxy## Kết nối Mạng & Băng thông (Bandwidth)
+## 4. Cấu hình Mạng (Network Bandwidth) & Hạ tầng Proxy
+
+### Kết nối Mạng & Băng thông (Bandwidth)
 
 * Băng thông kết nối: Do dung lượng cụm Prod khá lớn (7TB – 14TB), mạng kết nối giữa các Node Slave K8s và Cụm MinIO bắt buộc phải đạt tối thiểu 10 Gbps (Khuyến nghị 25 Gbps hoặc cấu hình LACP/Bonding 2x10Gbps).
 * Nếu dùng mạng 1 Gbps, việc Export 14TB dữ liệu sang MinIO sẽ gây nghẽn nghiêm trọng và không thể hoàn thành trong khung thời gian backup (Backup Window).
 * Phân tách mạng (VLAN): Cần tách biệt Traffic mạng Backup (K8s Nodes <-> MinIO Cluster) độc lập với Traffic chạy ứng dụng (Production/User Traffic) nhằm tránh xung đột băng thông.
 
-## Cơ chế Proxy / Data Mover
+### Cơ chế Proxy / Data Mover
 
 * Kasten K10 không sử dụng "VM Proxy" rời như giải pháp Veeam Backup cho máy ảo truyền thống.
 * Thay vào đó, khi có lệnh backup, Kasten tự động tạo ra các Pod Data Mover tạm thời (ephemeral pods) nằm ngay trên các Slave Node chứa ứng dụng. Các Pod này trực tiếp mount Snapshot từ vSphere CNS và truyền tải thẳng qua mạng S3 đến MinIO. Do đó, năng lực xử lý (Proxy) sẽ tự động co giãn (scale-out) theo số lượng Slave Node ứng dụng của bạn. [4, 6, 13, 14] 
 
 ------------------------------
-## 5. Yêu cầu Hiệu năng IOPS & Lưu trữ (Storage Target)## Phía SAN Physical & vSphere CNS (Source)
+## 5. Yêu cầu Hiệu năng IOPS & Lưu trữ (Storage Target)
+
+### Phía SAN Physical & vSphere CNS (Source)
 
 * IOPS đột biến: Khi Kasten kích hoạt chính sách Backup, hệ thống SAN sẽ phải chịu áp lực nhân đôi: Vừa gánh IOPS đọc/ghi của ứng dụng hiện tại, vừa gánh IOPS đọc dữ liệu tuần tự từ Snapshot để export.
 * Yêu cầu: Vùng LUN 7TB-14TB trên SAN của cụm Prod nên nằm trên các phân vùng SSD/NVMe (All-Flash) hoặc Tiering SAS 15K có bộ đệm lớn, đảm bảo khả năng cung cấp tối thiểu 5,000 đến 10,000 IOPS trong giai đoạn chạy backup mà không làm tăng độ trễ (latency) của ứng dụng vượt quá 20ms. [14] 
